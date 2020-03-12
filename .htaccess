@@ -1,0 +1,58 @@
+
+<Limit GET POST PUT DELETE>
+	Order allow,deny
+	Allow from all
+</Limit>
+
+<FilesMatch ".(htaccess|htpasswd|htgroup|ini|phps|fla|psd|log|sh|cache)$">
+	Order allow,deny
+	Deny from all
+</FilesMatch>
+
+<FilesMatch "^/.git">
+	Order allow,deny
+	Deny from all
+</FilesMatch>
+
+<Files php.ini>
+order allow,deny 
+deny from all
+</Files>
+
+
+<IfModule mod_headers.c>
+	
+	<FilesMatch "\.(ico|pdf|flv|woff|woff2|ttf|otf|eot|mp4|mov|avi)$">
+		Header set Cache-Control "max-age=29030400, public"
+	</FilesMatch>
+
+	<FilesMatch "\.(jpg|jpeg|png|gif|swf|svg)$">
+		Header set Cache-Control "max-age=604800, public"
+	</FilesMatch>
+	
+	<FilesMatch "\.(xml|txt|css|js)$">
+		Header set Cache-Control "max-age=604800, proxy-revalidate"
+	</FilesMatch>
+	
+</IfModule>
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+
+#RewriteBase /
+
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule .* index.php [L]
+RewriteRule . /index.php [L]
+
+
+</IfModule>
+
+
